@@ -1,0 +1,13 @@
+certifi==2024.12.14
+docutils==0.21.2
+environs==11.2.1
+MarkupSafe==3.0.2
+marshmallow==3.23.1
+numpy==2.2.0
+packaging==24.2
+polygon-geohasher==0.0.1
+pyproj==3.7.0
+python-dotenv==1.0.1
+python-geohash==0.8.5
+rocksdb3==0.1.0
+shapely==2.0.6
