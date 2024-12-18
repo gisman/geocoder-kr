@@ -272,6 +272,9 @@ xhr.send(data);
 
 좌표(위도와 경도)에 해당하는 주소를 찾습니다.
 
+![image](https://github.com/user-attachments/assets/9da15c87-0cfa-43c1-a353-8712d1efbea7)
+
+
 ### Request
 
  http://localhost:4001/api/reverse_geocode/?x=127.12771948485866&y=37.47699735340699
