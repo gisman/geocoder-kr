@@ -55,7 +55,7 @@ Response
 
 ## 여러 개의 주소 지오코딩
 
-줄 바꿈으로 구분하여 여러 주소를 한 번에 지오코딩
+여러 주소를 한 번에 지오코딩하는 방법은 간단합니다. 각 주소를 줄바꿈 문자로 구분하세요.
 
 ### python 예
 
@@ -319,9 +319,9 @@ pip install -r requirements.txt
         └── 📄 005444.sst [65MB]
 ```
 
-[Geocoding 데이터 다운로드](https://geocode.gimi9.com/static/rocks.tar.gz)
+[Geocoding 데이터 다운로드](https://geocode.gimi9.com/static/download/rocks.tar.gz)
 
-[Reverse Geocoding 데이터 다운로드](https://geocode.gimi9.com/static/rocks-reverse-geocoder.tar.gz)
+[Reverse Geocoding 데이터 다운로드](https://geocode.gimi9.com/static/download/rocks-reverse-geocoder.tar.gz)
 
 
 ## 상업적 이용
