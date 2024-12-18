@@ -274,7 +274,7 @@ xhr.send(data);
 
 ### Request
 
- http://localhost:4001/api/reverse_geocode/?x=127.12771948485866&y=37.47699735340699
+> http://localhost:4001/api/reverse_geocode/?x=127.12771948485866&y=37.47699735340699
 
 ### Response
 
@@ -303,6 +303,10 @@ pip install -r requirements.txt
 
 ### 데이터 다운로드
 
+[Geocoding 데이터 다운로드](https://geocode.gimi9.com/static/download/rocks.tar.gz)
+
+[Reverse Geocoding 데이터 다운로드](https://geocode.gimi9.com/static/download/rocks-reverse-geocoder.tar.gz)
+
 다운로드한 파일을 설치 디렉토리에 다음과 같이 복사하세요.
 
 ```bash
@@ -319,13 +323,48 @@ pip install -r requirements.txt
         └── 📄 005444.sst [65MB]
 ```
 
-[Geocoding 데이터 다운로드](https://geocode.gimi9.com/static/download/rocks.tar.gz)
+## 자주 묻는 질문
 
-[Reverse Geocoding 데이터 다운로드](https://geocode.gimi9.com/static/download/rocks-reverse-geocoder.tar.gz)
+### geocode.gimi9.com의 API 서버를 사용할 수 있나요?
 
+그렇습니다. 하지만 계약을 해야 합니다. gisman@gmail.com으로 문의해 주세요.
+
+### 데이터 업데이트는 얼마나 자주 하나요?
+
+매일 합니다. 그리고 geocode.gimi9.com에 적용합니다.
+
+다운로드 파일은 비정기적으로 배포합니다.
+
+### 어떤 데이터를 사용하나요?
+
+지오코딩은 주소정보 누리집의 여러 공공데이터를 사용합니다.
+
+리버스 지오코딩은 브이월드의 연속지적도와 건물도형 공공데이터를 사용합니다.
+
+### 처리 속도는 얼마나 빠른가요?
+
+지오코딩 속도는 초당 3천건 이상입니다. 리버스 지오코딩은 더 빠릅니다.
+
+### 서버의 권장 사양은?
+
+CPU와 메모리 용량은 처리 속도에 큰 영향을 주지 않습니다. AWS의 t2.micro (1 vCPU, 1GiB Memory) 수준이면 충분합니다.
+
+저장장치로 SSD 사용을 권장합니다.
+
+## 기여
+
+기여를 환영합니다!
+
+* 지오코딩이 안 되는 주소가 있으면 알려주세요.
+
+## 크레딧
+
+* [Meta의 RocksDB](https://github.com/facebook/rocksdb)를 이용하여 간단한 구조와 빠른 성능을 얻을 수 있었습니다.
 
 ## 상업적 이용
 
-상업적 이용은 엄격히 제한됩니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하시기 바랍니다.
+상업적 이용은 엄격히 금지됩니다.
+
+자세한 내용은 [LICENSE](LICENSE) 파일을 참조하시기 바랍니다.
 
 문의사항: gisman@gmail.com
