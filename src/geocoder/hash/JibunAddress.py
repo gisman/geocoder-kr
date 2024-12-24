@@ -1,6 +1,6 @@
 import re
 from ..Tokenizer import Tokenizer
-from ..tokens import Tokens
+from ..tokens import *
 from ..util.HSimplifier import HSimplifier
 
 
@@ -25,18 +25,18 @@ class JibunAddress:
         length = len(toks)
         for n in range(length):
             tkn = toks.get(n)
-            if tkn.t == Tokens.TOKEN_H23 and h23 == "":
+            if tkn.t == TOKEN_H23 and h23 == "":
                 h23 = self.hSimplifier.h23Hash(tkn.val)
-            elif tkn.t == Tokens.TOKEN_H4 and hd == "":
+            elif tkn.t == TOKEN_H4 and hd == "":
                 hd = self.hSimplifier.h4Hash(tkn.val)
-            elif tkn.t == Tokens.TOKEN_RI and h5 == "":
+            elif tkn.t == TOKEN_RI and h5 == "":
                 h5 = self.hSimplifier.h5Hash(tkn.val)
-            elif tkn.t == Tokens.TOKEN_BNG and bng == "":
+            elif tkn.t == TOKEN_BNG and bng == "":
                 bng = self.__extractBng(tkn.val)
             else:
                 continue
-        # Tokens.TOKEN_BLD       = 'BLD'
-        # Tokens.TOKEN_BLD_DONG  = 'BLD_DONG'
+        # TOKEN_BLD       = 'BLD'
+        # TOKEN_BLD_DONG  = 'BLD_DONG'
 
         bng = self.__bunjiHash(bng)
         hash = "{}_{}_{}_{}".format(h23, hd, h5, bng)
