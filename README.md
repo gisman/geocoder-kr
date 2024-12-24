@@ -199,6 +199,8 @@ RESTful API를 설계, 문서화, 테스트하기 위한 [Swagger](https://swagg
 
 [온라인 문서](http://localhost:4001/docs#/)
 
+![image](https://github.com/user-attachments/assets/034b7c7f-6a3b-4c15-a454-7da784ef94df)
+
 
 ## 설치
 
