@@ -1,49 +1,67 @@
 # -*- coding: utf-8 -*-
 """
+This module provides a FastAPI-based HTTP server for geocoding and reverse geocoding operations.
+
+__author__ = "gisman@gmail.com"
+
+Usage:
+
+Endpoints:
+    - GET /: Returns a welcome HTML page with links to API documentation, source code, and an online demo.
+    - GET /geocode: Geocodes a single address or multiple addresses provided as a newline-separated string.
+    - GET /reverse_geocode: Reverse geocodes a given x and y coordinate.
+    - POST /batch_geocode: Geocodes multiple addresses provided in a JSON payload.
+
+Classes:
+    - Batch_Geocode_Item: Pydantic model for batch geocoding input.
+    - ApiHandler: Handles geocoding and reverse geocoding operations using RocksDB.
+
+Attributes:
+    APP_NAME (str): Name of the application.
+    VERSION (float): Version of the application.
+    DEFAULT_PORT (int): Default port for the server.
+    LINES_LIMIT (int): Maximum number of lines for batch geocoding.
+    X_AXIS (str): Key for x-axis coordinate in the response.
+    Y_AXIS (str): Key for y-axis coordinate in the response.
+
+Functions:
+    - read_root: Returns a static HTML page with links to API documentation, source code, and an online demo.
+    - geocode: Geocodes a single address or multiple addresses.
+    - reverse_geocode: Reverse geocodes a given x and y coordinate.
+    - batch_geocode: Geocodes multiple addresses provided in a JSON payload.
+
+Main Execution:
+    - Configures logging.
+    - Runs the FastAPI server using Uvicorn.
+
 Geocode API HTTP Server 
-Usage::
+Usage:
     ./api_fast.py [<port>]
 """
 
-
 import time
-
-from http.server import (
-    BaseHTTPRequestHandler,
-    ThreadingHTTPServer,
-    SimpleHTTPRequestHandler,
-    HTTPServer,
-)
 import logging
-from markupsafe import escape
 import os
-
-from geocoder.Geocoder import Geocoder
-from geocoder.ReverseGeocoder import ReverseGeocoder
-
-from geocoder.db.rocksdb import RocksDbGeocode
-
-import json
-
 import rocksdb3
 from pyproj import Transformer, CRS
-from urllib.parse import urlparse, unquote, unquote_plus, parse_qs
+
 from fastapi import APIRouter
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, HTMLResponse
 from pydantic import BaseModel
-
 import uvicorn
 
-APP_NAME = "Geocode API Server"
-VERSION = 0.1
-DEFAULT_PORT = 4001
+from geocoder.Geocoder import Geocoder
+from geocoder.ReverseGeocoder import ReverseGeocoder
+from geocoder.db.rocksdb import RocksDbGeocode
 
+APP_NAME = "Geocode API Server"
+VERSION = 0.2
+DEFAULT_PORT = 4001
 LINES_LIMIT = 3000
 
 X_AXIS = "x_axis"
 Y_AXIS = "y_axis"
-
 
 app = FastAPI()
 router = APIRouter()
@@ -51,7 +69,14 @@ router = APIRouter()
 
 @app.get("/")
 async def read_root():
-    # return static html has a link to "/docs"
+    """
+    Asynchronous function to handle the root endpoint of the Geocode API Server.
+    Returns:
+        HTMLResponse: A static HTML response containing a welcome message,
+        a link to the API documentation, a link to the source code on GitHub,
+        and a link to an online demo.
+    """
+
     return HTMLResponse(
         content="""
     <!DOCTYPE html>
@@ -72,6 +97,15 @@ async def read_root():
 
 @router.get("/geocode")
 async def geocode(q: str):
+    """
+    Geocodes a given query string.
+
+    Args:
+        q (str): A string containing addresses separated by newline characters.
+
+    Returns:
+        JSONResponse: A JSON response containing the geocoded addresses.
+    """
     addrs = q.split("\n")
     summary = ApiHandler().geocode(addrs)
     return JSONResponse(content=summary)
@@ -79,16 +113,45 @@ async def geocode(q: str):
 
 @router.get("/reverse_geocode")
 async def reverse_geocode(x: float, y: float):
+    """
+    Asynchronously performs reverse geocoding for the given coordinates.
+
+    Args:
+        x (float): The longitude of the location to reverse geocode.
+        y (float): The latitude of the location to reverse geocode.
+
+    Returns:
+        JSONResponse: A JSON response containing the reverse geocoding result.
+    """
     val = ApiHandler().reverse_geocode(x, y)
     return JSONResponse(content=val)
 
 
 class Batch_Geocode_Item(BaseModel):
+    """
+    Batch_Geocode_Item is a Pydantic model representing a batch geocode request item.
+
+    Attributes:
+        q (list[str]): A list of query strings to be geocoded.
+    """
+
     q: list[str]
 
 
 @router.post("/batch_geocode")
 async def batch_geocode(data: Batch_Geocode_Item):
+    """
+    Geocode multiple addresses asynchronously.
+
+    Args:
+        data (Batch_Geocode_Item): An object containing a list of addresses to be geocoded.
+
+    Raises:
+        HTTPException: If the input data is invalid (i.e., the list of addresses is empty).
+
+    Returns:
+        JSONResponse: A JSON response containing the geocoding summary for the provided addresses.
+    """
     # multi addresses geocode
     addrs = data.q
     if not addrs:
@@ -97,10 +160,29 @@ async def batch_geocode(data: Batch_Geocode_Item):
     return JSONResponse(content=summary)
 
 
+# app에 router를 추가
 app.include_router(router)
 
 
 class ApiHandler:
+    """
+    ApiHandler class provides methods for geocoding and reverse geocoding using RocksDB.
+
+    Attributes:
+        geocoder (Geocoder): An instance of Geocoder initialized with RocksDbGeocode.
+        reverse_geocoder (ReverseGeocoder): An instance of ReverseGeocoder initialized with RocksDB.
+        tf (Transformer): A Transformer object for converting coordinates between EPSG:5179 and EPSG:4326.
+
+    Methods:
+        read_key(key):
+            Reads a value from the geocoder database using the provided key.
+
+        reverse_geocode(x: float, y: float):
+            Performs reverse geocoding for the given coordinates (x, y).
+
+        geocode(addrs):
+            Performs geocoding for a list of addresses and returns a summary of the results.
+    """
 
     # rocks db
     geocoder = Geocoder(RocksDbGeocode("db/rocks", create_if_missing=True))
@@ -120,6 +202,19 @@ class ApiHandler:
         return val
 
     def reverse_geocode(self, x: float, y: float):
+        """
+        Perform reverse geocoding to find the address corresponding to the given coordinates.
+
+        Args:
+            x (float): The longitude of the location to reverse geocode.
+            y (float): The latitude of the location to reverse geocode.
+
+        Returns:
+            dict: The address information corresponding to the given coordinates.
+
+        Logs:
+            Execution time for the reverse geocoding process.
+        """
         start_time = time.time()  # 시작 시간 측정
 
         val = self.reverse_geocoder.search(x, y)
@@ -134,6 +229,27 @@ class ApiHandler:
         return val
 
     def geocode(self, addrs):
+        """
+        Geocode a list of addresses.
+
+        Args:
+            addrs (list): A list of addresses to geocode.
+
+        Returns:
+            dict: A summary dictionary containing:
+                - total_time (float): The total time taken to geocode the addresses.
+                - total_count (int): The total number of addresses processed.
+                - success_count (int): The number of successfully geocoded addresses.
+                - fail_count (int): The number of addresses that failed to geocode.
+                - results (list): A list of dictionaries containing the geocoding results for each address.
+                    Each dictionary includes:
+                    - inputaddr (str): The input address.
+                    - success (bool): Whether the geocoding was successful.
+                    - x (float, optional): The x-coordinate of the geocoded address.
+                    - y (float, optional): The y-coordinate of the geocoded address.
+                    - X_AXIS (float, optional): The transformed x-coordinate.
+                    - Y_AXIS (float, optional): The transformed y-coordinate.
+        """
         summary = {}
         result = []
         count = 0
@@ -168,105 +284,6 @@ class ApiHandler:
 
         return summary
 
-    # def do_GET(self):
-    #     # favicon.ico
-    #     if self.path == "/favicon.ico":
-    #         return None
-
-    #     parsed_path = urlparse(self.path)
-
-    #     # if params has 'key' key
-    #     # search key and return value
-    #     if parsed_path.query.find("key") > -1:
-    #         key = parsed_path.query.split("=")[1]
-
-    #         val = self.read_key(key)
-    #         self.send_response(200)  # 응답코드
-    #         self.end_headers()  # 헤더와 본문을 구분
-    #         self.wfile.write(val)
-    #         return
-
-    #     qs = parse_qs(parsed_path.query)
-    #     if "x" in qs and "y" in qs:
-    #         x = float(qs["x"][0])
-    #         y = float(qs["y"][0])
-    #         val = self.reverse_geocode(x, y)
-
-    #         self.send_response(200)  # 응답코드
-    #         self.end_headers()  # 헤더와 본문을 구분
-    #         self.wfile.write(json.dumps(val).encode("utf-8"))
-    #         return
-
-    #     # run geocode and return result
-    #     if parsed_path.query.find("q") > -1:
-    #         q = unquote(parsed_path.query.split("=")[1])
-    #         addrs = q.split("\n")
-    #         summary = self.geocode(addrs)
-
-    #         self.send_response(200)  # 응답코드
-    #         self.end_headers()  # 헤더와 본문을 구분
-    #         self.wfile.write(json.dumps(summary).encode("utf-8"))
-    #         return
-
-    # def do_POST(self):
-    #     """
-    #     HTTP POST 요청을 처리합니다.
-
-    #     이 메소드는 서버가 POST 요청을 받았을 때 호출됩니다. 요청 데이터를 읽고, 요청 경로에 따라 지오코딩을 수행하고, 지오코딩 결과를 JSON 응답으로 보냅니다.
-
-    #     - q: 지오코딩할 주소의 개행으로 구분된 목록.
-
-    #     반환값:
-    #     - 지오코딩 결과를 포함하는 JSON 응답.
-    #     """
-    #     content_length = int(self.headers["Content-Length"])
-    #     post_data = self.rfile.read(content_length).decode()
-    #     response_code = 200
-
-    #     # multi addr geocode
-    #     q = unquote_plus(post_data.split("=")[1])
-    #     addrs = q.split("\n")
-    #     summary = self.geocode(addrs)
-
-    #     self.send_response(response_code)  # 응답코드
-    #     self.end_headers()  # 헤더와 본문을 구분
-    #     self.wfile.write(json.dumps(summary).encode("utf-8"))
-
-
-# def run(server_class=ThreadingHTTPServer, handler_class=ApiHandler, port=DEFAULT_PORT):
-#     LOG_PATH = f"{os.getcwd()}/log/geocode-api.log"
-#     print(f"logging to {LOG_PATH}")
-
-#     # 로그 설정
-#     logging.basicConfig(
-#         filename=LOG_PATH,
-#         encoding="utf-8",
-#         format="%(asctime)s - %(levelname)s - %(message)s",
-#         level=logging.INFO,
-#         force=True,
-#     )
-
-#     server_address = ("", port)
-#     httpd = server_class(server_address, handler_class)
-#     logging.info(f"Starting {APP_NAME}...\n")
-#     try:
-#         httpd.serve_forever()
-#     except KeyboardInterrupt:
-#         pass
-#     httpd.server_close()
-#     logging.info(f"Stopping {APP_NAME}...\n")
-
-
-# if __name__ == "__main__":
-#     from sys import argv
-
-#     if len(argv) == 2:
-#         # profiler.run(run(port=int(argv[1])))
-#         run(port=int(argv[1]))
-
-#     else:
-#         # profiler.run(run())
-#         run()
 
 if __name__ == "__main__":
     LOG_PATH = f"{os.getcwd()}/log/geocode-api.log"

@@ -5,12 +5,12 @@ git pull
 
 lsof -ti:4001 | xargs kill -9
 
-cd ~/projects/geocoder-api
+cd ~/projects/geocoder-kr
 source venv/bin/activate
 echo 'Starting...'
 
 export FLASK_ENV=production
-echo | nohup python src/api.py >> log/geocode-api.log &
+echo | nohup python src/api_fast.py >> log/geocode-api.log &
 
 sleep 1
 echo 'Started'
