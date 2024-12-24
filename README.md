@@ -9,7 +9,7 @@
 ## Simple 지오코딩
 
 Request
-> http://localhost:4001/api?q=서울특별시 송파구 송파대로8길 10
+> [http://localhost:4001/api?q=서울특별시 송파구 송파대로8길 10](http://localhost:4001/geocode?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%86%A1%ED%8C%8C%EB%8C%80%EB%A1%9C8%EA%B8%B8%2010)
 
 Response
 ```json
@@ -57,58 +57,73 @@ Response
 
 여러 주소를 한 번에 지오코딩하는 방법은 간단합니다. 각 주소를 줄바꿈 문자로 구분하세요.
 
+### curl 예
+
+```bash
+curl -X 'POST' \
+  'http://localhost:4001/batch_geocode' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "q": [
+    "서울특별시 송파구 송파대로8길 10",
+    "서울특별시 송파구 양재대로72길 20",
+    "서울특별시 구로구 고척로21나길 85-6",
+    "서울특별시 노원구 월계로53길 21",
+    "서울특별시 서초구 바우뫼로 91"
+  ]
+}'
+```
+
 ### python 예
 
 ```python
 import requests
 
-url = 'http://localhost:4001/api/'
+url = 'http://localhost:4001/batch_geocode'
 headers = {
-  'Accept': '*/*',
-  'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-  'Cache-Control': 'no-cache',
-  'Connection': 'keep-alive',
-  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-  'Pragma': 'no-cache',
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-  'X-Requested-With': 'XMLHttpRequest'
+  'accept': 'application/json',
 }
 data = {
-  'q': '서울특별시 송파구 송파대로8길 10\n서울특별시 송파구 양재대로72길 20\n서울특별시 구로구 고척로21나길 85-6\n서울특별시 노원구 월계로53길 21\n서울특별시 서초구 바우뫼로 91'
+  "q": [
+    "서울특별시 송파구 송파대로8길 10",
+    "서울특별시 송파구 양재대로72길 20",
+    "서울특별시 구로구 고척로21나길 85-6",
+    "서울특별시 노원구 월계로53길 21",
+    "서울특별시 서초구 바우뫼로 91"
+  ]
 }
 
-response = requests.post(url, headers=headers, data=data)
+response = requests.post(url, headers=headers, json=data)
 print(response.json())
 ```
 
 ### javascript 예
 
 ```javascript
-const xhr = new XMLHttpRequest();
-const url = 'http://localhost:4001/api/';
-const data = 'q=서울특별시 송파구 송파대로8길 10\n서울특별시 송파구 양재대로72길 20\n서울특별시 구로구 고척로21나길 85-6\n서울특별시 노원구 월계로53길 21\n서울특별시 서초구 바우뫼로 91';
+const axios = require('axios');
 
-xhr.open('POST', url, true);
-xhr.setRequestHeader('Accept', '*/*');
-xhr.setRequestHeader('Accept-Language', 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7');
-xhr.setRequestHeader('Cache-Control', 'no-cache');
-xhr.setRequestHeader('Connection', 'keep-alive');
-xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-xhr.setRequestHeader('Pragma', 'no-cache');
-xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36');
-xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-xhr.onreadystatechange = function () {
-  if (xhr.readyState === XMLHttpRequest.DONE) {
-    if (xhr.status === 200) {
-      console.log(JSON.parse(xhr.responseText));
-    } else {
-      console.error('Error:', xhr.statusText);
-    }
-  }
+const url = 'http://localhost:4001/batch_geocode';
+const headers = {
+  'accept': 'application/json',
+};
+const data = {
+  q: [
+    "서울특별시 송파구 송파대로8길 10",
+    "서울특별시 송파구 양재대로72길 20",
+    "서울특별시 구로구 고척로21나길 85-6",
+    "서울특별시 노원구 월계로53길 21",
+    "서울특별시 서초구 바우뫼로 91"
+  ]
 };
 
-xhr.send(data);
+axios.post(url, data, { headers })
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
 ```
 
 ### Response
@@ -149,121 +164,7 @@ xhr.send(data);
       "y_axis": 37.476715383128074,
       "inputaddr": "서울특별시 송파구 송파대로8길 10"
     },
-    {
-      "x": 967186,
-      "y": 1945578,
-      "z": "05656",
-      "hc": "1171057000",
-      "lc": "1171011200",
-      "rc": "117104169373",
-      "bn": "1171011200100200002015225",
-      "h1": "서울",
-      "rm": "양재대로72길",
-      "bm": [
-        "현대백조",
-        "현대백조",
-        ""
-      ],
-      "success": true,
-      "errmsg": "",
-      "h1_cd": "11",
-      "h2_cd": "11710",
-      "kostat_h1_cd": "11",
-      "kostat_h2_cd": "11240",
-      "hash": "송파_양재대로72길_20-0",
-      "address": "서울특별시 송파구 양재대로72길 20",
-      "addressCls": "ROAD_ADDRESS",
-      "toksString": "H1\t서울특별시\nH23\t송파구\nROAD\t양재대로72길\n건번\t20",
-      "x_axis": 127.12871584694417,
-      "y_axis": 37.5088959535705,
-      "inputaddr": "서울특별시 송파구 양재대로72길 20"
-    },
-    {
-      "x": 941720,
-      "y": 1944837,
-      "z": "08250",
-      "hc": "1153074000",
-      "lc": "1153010700",
-      "rc": "115304148138",
-      "bn": "1153010700100470001010403",
-      "h1": "서울",
-      "rm": "고척로21나길",
-      "bm": [
-        "건영",
-        "건영",
-        ""
-      ],
-      "success": true,
-      "errmsg": "",
-      "h1_cd": "11",
-      "h2_cd": "11530",
-      "kostat_h1_cd": "11",
-      "kostat_h2_cd": "11170",
-      "hash": "구로_고척로21나길_85-6",
-      "address": "서울특별시 구로구 고척로21나길 85-6",
-      "addressCls": "ROAD_ADDRESS",
-      "toksString": "H1\t서울특별시\nH23\t구로구\nROAD\t고척로21나길\n건번\t85-6",
-      "x_axis": 126.84064530819364,
-      "y_axis": 37.5009601916592,
-      "inputaddr": "서울특별시 구로구 고척로21나길 85-6"
-    },
-    {
-      "x": 961048,
-      "y": 1959236,
-      "z": "01867",
-      "hc": "1135057000",
-      "lc": "1135010200",
-      "rc": "113504130335",
-      "bn": "1135010200102760031018659",
-      "h1": "서울",
-      "rm": "월계로53길",
-      "bm": [
-        "동원베네스트",
-        ""
-      ],
-      "success": true,
-      "errmsg": "",
-      "h1_cd": "11",
-      "h2_cd": "11350",
-      "kostat_h1_cd": "11",
-      "kostat_h2_cd": "11110",
-      "hash": "노원_월계로53길_21-0",
-      "address": "서울특별시 노원구 월계로53길 21",
-      "addressCls": "ROAD_ADDRESS",
-      "toksString": "H1\t서울특별시\nH23\t노원구\nROAD\t월계로53길\n건번\t21",
-      "x_axis": 127.0585412803165,
-      "y_axis": 37.63176077853112,
-      "inputaddr": "서울특별시 노원구 월계로53길 21"
-    },
-    {
-      "x": 958515,
-      "y": 1941900,
-      "z": "06751",
-      "hc": "1165065100",
-      "lc": "1165010200",
-      "rc": "116503121009",
-      "bn": "1165010200101480003005849",
-      "h1": "서울",
-      "rm": "바우뫼로",
-      "bm": [
-        "우성",
-        "우성",
-        ""
-      ],
-      "success": true,
-      "errmsg": "",
-      "h1_cd": "11",
-      "h2_cd": "11650",
-      "kostat_h1_cd": "11",
-      "kostat_h2_cd": "11220",
-      "hash": "서초_바우뫼로_91-0",
-      "address": "서울특별시 서초구 바우뫼로 91",
-      "addressCls": "ROAD_ADDRESS",
-      "toksString": "H1\t서울특별시\nH23\t서초구\nROAD\t바우뫼로\n건번\t91",
-      "x_axis": 127.03081525069099,
-      "y_axis": 37.47539563638899,
-      "inputaddr": "서울특별시 서초구 바우뫼로 91"
-    }
+생략...
   ]
 }
 ```
@@ -277,7 +178,7 @@ xhr.send(data);
 
 ### Request
 
-> http://localhost:4001/api/reverse_geocode/?x=127.12771948485866&y=37.47699735340699
+> http://localhost:4001/reverse_geocode/?x=127.12771948485866&y=37.47699735340699
 
 ### Response
 
@@ -292,11 +193,18 @@ xhr.send(data);
 }
 ```
 
+## /docs
+
+RESTful API를 설계, 문서화, 테스트하기 위한 [Swagger](https://swagger.io/) 기반의 도구를 제공합니다.
+
+[온라인 문서](http://localhost:4001/docs#/)
+
+
 ## 설치
 
 간단한 설치. DBMS 필요 없음
 
-```sh
+```bash
 git clone https://github.com/your-repo/geocoder-kr.git
 cd geocoder-kr
 python -m venv venv
@@ -310,7 +218,7 @@ pip install -r requirements.txt
 
 [Reverse Geocoding 데이터 다운로드](https://geocode.gimi9.com/static/download/rocks-reverse-geocoder.tar.gz)
 
-다운로드한 파일을 설치 디렉토리에 다음과 같이 복사하세요.
+다운로드한 파일을 설치 디렉토리(geocode-kr)에 다음과 같이 복사하세요.
 
 ```bash
  📂 db                                       [13GB]
@@ -346,13 +254,15 @@ pip install -r requirements.txt
 
 ### 처리 속도는 얼마나 빠른가요?
 
-지오코딩 속도는 초당 3천건 이상입니다. 리버스 지오코딩은 더 빠릅니다.
+지오코딩 속도는 초당 3천건 이상입니다. 리버스 지오코딩도 비슷합니다.
 
 ### 서버의 권장 사양은?
 
-CPU와 메모리 용량은 처리 속도에 큰 영향을 주지 않습니다. AWS의 t2.micro (1 vCPU, 1GiB Memory) 수준이면 충분합니다.
+CPU와 메모리는 AWS EC2 t2.micro (1 vCPU, 1GiB 메모리) 수준이면 충분합니다.
 
-저장장치로 SSD 사용을 권장합니다.
+저장 장치는 SSD를 권장합니다.
+
+운영 환경에서는 4GB 이상의 RAM을 권장합니다.
 
 ## 기여
 
