@@ -1,6 +1,19 @@
-[온라인 데모!](https://geocode.gimi9.com/) | [리버스 지오코딩에 대해 아시나요?](https://gimi9.com/blog/reverse-geocoding/)
+[온라인 데모!](https://geocode-kr.gimi9.com/) | [서비스 데모!](https://geocode.gimi9.com/) | [리버스 지오코딩에 대해 아시나요?](https://gimi9.com/blog/reverse-geocoding/)
 
-간편하게 설치할 수 있고 리소스 사용이 적으면서도 초고속 성능을 제공하는 셀프 호스팅 가능한 오픈소스 지오코딩 및 리버스 지오코딩 API.
+geocoder-kr은 한국 주소를 위한 Python 기반 지오코딩 솔루션입니다.
+이 솔루션을 사용하면 한국의 주소를 지리적 좌표(위도와 경도)로 변환할 수 있습니다.
+
+# 특징
+
+* 한국 주소 체계에 최적화
+* 다양한 주소 형식 지원 (도로명 주소, 지번 주소)
+* 지오코딩 및 리버스 지오코딩
+* 빠르고 정확한 지오코딩 결과
+* 쉬운 설치
+* 간편한 API 사용
+* 매우 적은 리소스 사용
+* 초고속 처리 속도
+* 셀프 호스팅 가능
 
 ![지오코딩](https://github.com/user-attachments/assets/24df3aed-37d4-4c02-8569-42ee471551b9)
 
@@ -9,7 +22,7 @@
 ## Simple 지오코딩
 
 Request
-> [http://localhost:4001/geocode?q=서울특별시 송파구 송파대로8길 10](http://localhost:4001/geocode?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%86%A1%ED%8C%8C%EB%8C%80%EB%A1%9C8%EA%B8%B8%2010)
+> [https://geocode-kr.gimi9.com/geocode?q=서울특별시 송파구 송파대로8길 10](https://geocode-kr.gimi9.com/geocode?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%86%A1%ED%8C%8C%EB%8C%80%EB%A1%9C8%EA%B8%B8%2010)
 
 Response
 ```json
@@ -61,7 +74,7 @@ Response
 
 ```bash
 curl -X 'POST' \
-  'http://localhost:4001/batch_geocode' \
+  'https://geocode-kr.gimi9.com/batch_geocode' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -80,7 +93,7 @@ curl -X 'POST' \
 ```python
 import requests
 
-url = 'http://localhost:4001/batch_geocode'
+url = 'https://geocode-kr.gimi9.com/batch_geocode'
 headers = {
   'accept': 'application/json',
 }
@@ -103,7 +116,7 @@ print(response.json())
 ```javascript
 const axios = require('axios');
 
-const url = 'http://localhost:4001/batch_geocode';
+const url = 'https://geocode-kr.gimi9.com/batch_geocode';
 const headers = {
   'accept': 'application/json',
 };
@@ -178,7 +191,7 @@ axios.post(url, data, { headers })
 
 ### Request
 
-> http://localhost:4001/reverse_geocode/?x=127.12771948485866&y=37.47699735340699
+> https://geocode-kr.gimi9.com/reverse_geocode/?x=127.12771948485866&y=37.47699735340699
 
 ### Response
 
@@ -197,7 +210,7 @@ axios.post(url, data, { headers })
 
 RESTful API를 설계, 문서화, 테스트하기 위한 [Swagger](https://swagger.io/) 기반의 도구를 제공합니다.
 
-[온라인 문서](http://localhost:4001/docs#/)
+[온라인 문서](https://geocode-kr.gimi9.com/docs#/)
 
 ![image](https://github.com/user-attachments/assets/034b7c7f-6a3b-4c15-a454-7da784ef94df)
 
@@ -236,9 +249,15 @@ pip install -r requirements.txt
         └── 📄 005444.sst [65MB]
 ```
 
+## 주의사항
+
+이 솔루션은 한국 주소에 특화되어 있으므로 해외 주소에는 사용할 수 없습니다.
+
+정확한 결과를 위해 가능한 한 상세한 주소를 입력하세요.
+
 ## 자주 묻는 질문
 
-### geocode.gimi9.com의 API 서버를 사용할 수 있나요?
+### geocode-kr.gimi9.com의 API 서버를 사용할 수 있나요?
 
 그렇습니다. 하지만 계약을 해야 합니다. gisman@gmail.com으로 문의해 주세요.
 
@@ -250,13 +269,15 @@ pip install -r requirements.txt
 
 ### 어떤 데이터를 사용하나요?
 
-지오코딩은 주소정보 누리집의 여러 공공데이터를 사용합니다.
+지오코딩은 [주소정보 누리집](https://www.juso.go.kr/)의 여러 공공데이터를 사용합니다.
 
-리버스 지오코딩은 브이월드의 연속지적도와 건물도형 공공데이터를 사용합니다.
+리버스 지오코딩은 [브이월드](https://gimi9.com/organization/vworld/)의 연속지적도와 건물도형 공공데이터를 사용합니다.
 
 ### 처리 속도는 얼마나 빠른가요?
 
-지오코딩 속도는 초당 3천건 이상입니다. 리버스 지오코딩도 비슷합니다.
+지오코딩 속도는 초당 3천 건 이상이며, 리버스 지오코딩도 비슷한 속도를 보입니다.
+
+기본적으로 비동기 처리를 사용하며, Uvicorn 서버의 워커 수를 조정하여 동시에 처리할 수 있는 요청 수를 늘릴 수 있습니다.
 
 ### 서버의 권장 사양은?
 
@@ -268,9 +289,15 @@ CPU와 메모리는 AWS EC2 t2.micro (1 vCPU, 1GiB 메모리) 수준이면 충�
 
 ## 기여
 
-기여를 환영합니다!
+기여를 환영합니다! GitHub 저장소를 포크하고 풀 리퀘스트를 보내주세요. 버그 리포트, 기능 제안, 문서 개선 등 모든 종류의 기여를 환영합니다.
 
-* 지오코딩이 안 되는 주소가 있으면 알려주세요.
+지오코딩이 안 되는 주소가 있으면 알려주세요.
+
+## 지원 및 문의
+
+문제가 발생하거나 질문이 있으시면 GitHub 이슈를 통해 문의해 주세요.
+
+빠르게 답을 얻으려면 [카톡 오픈채팅](https://open.kakao.com/o/gNplQr7f)으로 문의해주세요. 
 
 ## 크레딧
 
@@ -278,8 +305,16 @@ CPU와 메모리는 AWS EC2 t2.micro (1 vCPU, 1GiB 메모리) 수준이면 충�
 
 ## 상업적 이용
 
-상업적 이용은 엄격히 금지됩니다.
+상업적 이용은 엄격히 금지됩니다. 상업적으로 사용하려면 gisman@gmail.com 으로 문의해 주세요.
+
+다음과 같은 경우 자유롭게 사용할 수 있습니다. 
+
+* 개인적 사용: 개인이 비영리 목적으로 소프트웨어를 사용하는 경우
+* 교육 목적: 학교, 대학 등 교육 기관에서 학습 및 연구 목적으로 사용하는 경우
+* 비영리 단체: 자선 단체나 NGO 등이 그들의 미션을 수행하기 위해 사용하는 경우
+* 오픈소스 프로젝트: 다른 비상업적 오픈소스 프로젝트에서 해당 솔루션을 활용하는 경우
+* 정부 기관: 공공 서비스 제공을 위해 정부 기관에서 사용하는 경우
+* 학술 연구: 대학이나 연구소에서 순수 학술 목적으로 사용하는 경우
 
 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하시기 바랍니다.
 
-문의사항: gisman@gmail.com
