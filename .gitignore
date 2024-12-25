@@ -1,6 +1,7 @@
 /.vscode
 /__pycache__
-/db
+/db/rocks
+/db/rocks-reverse-geocoder
 /db_debug
 /juso.go.kr.layers.qgs
 /juso.go.kr.layers.qgs~
@@ -147,5 +148,4 @@ requirements.txt.old
 
 juso-data/
 startup.sh
-h1_h2_code.csv
 src/pro

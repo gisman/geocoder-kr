@@ -54,10 +54,11 @@ import uvicorn
 from geocoder.Geocoder import Geocoder
 from geocoder.ReverseGeocoder import ReverseGeocoder
 from geocoder.db.rocksdb import RocksDbGeocode
+import sys
 
 APP_NAME = "Geocode API Server"
 VERSION = 0.2
-DEFAULT_PORT = 4001
+DEFAULT_PORT = 4002
 LINES_LIMIT = 3000
 
 X_AXIS = "x_axis"
@@ -298,6 +299,11 @@ if __name__ == "__main__":
         force=True,
     )
 
-    uvicorn.run(app, host="0.0.0.0", port=DEFAULT_PORT)
+    if len(sys.argv) > 1:
+        port = int(sys.argv[1])
+    else:
+        port = DEFAULT_PORT
+
+    uvicorn.run(app, host="0.0.0.0", port=port)
 
     logging.info(f"Stopping {APP_NAME}...\n")

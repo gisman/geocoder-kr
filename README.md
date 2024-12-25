@@ -1,4 +1,4 @@
-[온라인 데모!](https://geocode.gimi9.com/) | [리버스 지오코딩에 대해 아시나요?](https://gimi9.com/blog/reverse-geocoding/)
+[온라인 데모!](https://geocode-kr.gimi9.com/) | [서비스 데모!](https://geocode.gimi9.com/) | [리버스 지오코딩에 대해 아시나요?](https://gimi9.com/blog/reverse-geocoding/)
 
 간편하게 설치할 수 있고 리소스 사용이 적으면서도 초고속 성능을 제공하는 셀프 호스팅 가능한 오픈소스 지오코딩 및 리버스 지오코딩 API.
 
@@ -9,7 +9,7 @@
 ## Simple 지오코딩
 
 Request
-> [http://localhost:4001/geocode?q=서울특별시 송파구 송파대로8길 10](http://localhost:4001/geocode?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%86%A1%ED%8C%8C%EB%8C%80%EB%A1%9C8%EA%B8%B8%2010)
+> [https://geocode-kr.gimi9.com/geocode?q=서울특별시 송파구 송파대로8길 10](https://geocode-kr.gimi9.com/geocode?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%86%A1%ED%8C%8C%EB%8C%80%EB%A1%9C8%EA%B8%B8%2010)
 
 Response
 ```json
@@ -61,7 +61,7 @@ Response
 
 ```bash
 curl -X 'POST' \
-  'http://localhost:4001/batch_geocode' \
+  'https://geocode-kr.gimi9.com/batch_geocode' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -80,7 +80,7 @@ curl -X 'POST' \
 ```python
 import requests
 
-url = 'http://localhost:4001/batch_geocode'
+url = 'https://geocode-kr.gimi9.com/batch_geocode'
 headers = {
   'accept': 'application/json',
 }
@@ -103,7 +103,7 @@ print(response.json())
 ```javascript
 const axios = require('axios');
 
-const url = 'http://localhost:4001/batch_geocode';
+const url = 'https://geocode-kr.gimi9.com/batch_geocode';
 const headers = {
   'accept': 'application/json',
 };
@@ -178,7 +178,7 @@ axios.post(url, data, { headers })
 
 ### Request
 
-> http://localhost:4001/reverse_geocode/?x=127.12771948485866&y=37.47699735340699
+> https://geocode-kr.gimi9.com/reverse_geocode/?x=127.12771948485866&y=37.47699735340699
 
 ### Response
 
@@ -197,7 +197,7 @@ axios.post(url, data, { headers })
 
 RESTful API를 설계, 문서화, 테스트하기 위한 [Swagger](https://swagger.io/) 기반의 도구를 제공합니다.
 
-[온라인 문서](http://localhost:4001/docs#/)
+[온라인 문서](https://geocode-kr.gimi9.com/docs#/)
 
 ![image](https://github.com/user-attachments/assets/034b7c7f-6a3b-4c15-a454-7da784ef94df)
 

@@ -3,7 +3,7 @@
 # Geocoder api (stand-alone http server. single process)
 git pull
 
-lsof -ti:4001 | xargs kill -9
+lsof -ti:4002 | xargs kill -9
 
 cd ~/projects/geocoder-kr
 source venv/bin/activate
