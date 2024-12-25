@@ -9,7 +9,7 @@
 ## Simple 지오코딩
 
 Request
-> [http://localhost:4001/api?q=서울특별시 송파구 송파대로8길 10](http://localhost:4001/geocode?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%86%A1%ED%8C%8C%EB%8C%80%EB%A1%9C8%EA%B8%B8%2010)
+> [http://localhost:4001/geocode?q=서울특별시 송파구 송파대로8길 10](http://localhost:4001/geocode?q=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%86%A1%ED%8C%8C%EB%8C%80%EB%A1%9C8%EA%B8%B8%2010)
 
 Response
 ```json
@@ -55,7 +55,7 @@ Response
 
 ## 여러 개의 주소 지오코딩
 
-여러 주소를 한 번에 지오코딩하는 방법은 간단합니다. 각 주소를 줄바꿈 문자로 구분하세요.
+여러 주소를 한 번에 지오코딩하는 방법은 간단합니다. 각 주소를 배열에 넣고 POST로 요청하세요.
 
 ### curl 예
 
