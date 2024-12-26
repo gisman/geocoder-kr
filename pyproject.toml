@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "geocoder_kr"
+version = "0.28"
+description = "Python-based geocoding solution for Korean addresses"
+readme = "README.md"
+readme-content-type = "text/markdown"
+authors = [
+    { name="gisman", email="gisman@gmail.com" }
+]
+license = { text="CC-BY-NC-SA-4.0" }
+requires-python = ">=3.6, <3.12"
+dependencies = [
+    "markupsafe",
+    "rocksdb3",
+    "pyproj",
+]
+
+[project.urls]
+Homepage = "https://github.com/gisman/geocoder-kr"
