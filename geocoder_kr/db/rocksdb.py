@@ -31,8 +31,8 @@ class RocksDbGeocode(DbBase):
             db_name (str): The name of the database.
             **kwargs: Additional arguments for the database.
         """
-        if not RocksDbGeocode._db:
-            RocksDbGeocode._db = rocksdb3.open_default(db_name)
+        if not self._db:
+            self._db = rocksdb3.open_default(db_name)
 
     def get(self, k):
         """

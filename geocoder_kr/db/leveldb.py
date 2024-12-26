@@ -1,6 +1,6 @@
 import leveldb
 import json
-from geocoder.db.base import DbBase
+from geocoder_kr.db.base import DbBase
 
 
 class LevelDbGeocode(DbBase):

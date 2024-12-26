@@ -17,6 +17,8 @@ import pyproj
 from pyproj import Transformer
 import logging
 
+from geocoder_kr.db.rocksdb import RocksDbGeocode
+
 from .util.pnumatcher import PNUMatcher
 from .util.roadmatcher import RoadMatcher
 
@@ -35,7 +37,6 @@ class ReverseGeocoder:
         GEOHASH_PRECISION (int): Geohash 정밀도.
         db (object): 데이터베이스 객체.
         log_handler (logging.FileHandler): 로그 핸들러.
-        logger (logging.Logger): 로거 객체.
 
     Methods:
         __init__(db):
@@ -88,24 +89,27 @@ class ReverseGeocoder:
     road_matcher = RoadMatcher()
     GEOHASH_PRECISION = 8
 
-    def __init__(self, db):
-        self.db = db
+    def __init__(self):
+        self.db = RocksDbGeocode("db/rocks-reverse-geocoder")
 
         # 좌표계 변환기 생성
 
-        log_file = "log/geocode-api.log"
-        log_handler = logging.FileHandler(log_file)
+        # log_file = "log/geocode-api.log"
+        # log_handler = logging.FileHandler(log_file)
 
-        log_handler.setLevel(logging.DEBUG)
+        # log_handler.setLevel(logging.DEBUG)
 
-        formatter = logging.Formatter("%(asctime)-15s - %(levelname)s - %(message)s")
-        log_handler.setFormatter(formatter)
+        # formatter = logging.Formatter("%(asctime)-15s - %(levelname)s - %(message)s")
+        # log_handler.setFormatter(formatter)
 
-        logger = logging.getLogger()
-        logger.addHandler(log_handler)
+        # logger = logging.getLogger()
+        # logger.addHandler(log_handler)
 
-        self.log_handler = log_handler
-        self.logger = logger
+        # self.log_handler = log_handler
+        # self.logger = logger
+
+    def open(self, db):
+        self.db = db
 
     def get_latest_addrs(self, addrs, shp_type):
         """
@@ -472,7 +476,7 @@ class ReverseGeocoder:
         ).transform
 
         # open shp file
-        self.logger.info(f"update_bld {shp_path}")
+        # self.logger.info(f"update_bld {shp_path}")
         with fiona.open(shp_path, "r", encoding="cp949") as shp_file:
             # for all geometry
             n = 0
@@ -481,7 +485,7 @@ class ReverseGeocoder:
                 self.update_bld_hash(feature, proj_transform)
                 n += 1
                 if n % 1000 == 0:
-                    self.logger.info(f"update {filename}: {n:,}")
+                    # self.logger.info(f"update {filename}: {n:,}")
                     print(n)
             print(n)
 
@@ -497,7 +501,7 @@ class ReverseGeocoder:
         ).transform
 
         # open shp file
-        self.logger.info(f"update_pnu {shp_path}")
+        # self.logger.info(f"update_pnu {shp_path}")
         with fiona.open(shp_path, "r", encoding="cp949") as shp_file:
             # for all geometry
             n = 0
@@ -506,6 +510,6 @@ class ReverseGeocoder:
                 self.update_pnu_hash(feature, proj_transform)
                 n += 1
                 if n % 1000 == 0:
-                    self.logger.info(f"update {filename}: {n:,}")
+                    # self.logger.info(f"update {filename}: {n:,}")
                     print(n)
             print(n)

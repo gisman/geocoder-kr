@@ -1,7 +1,7 @@
-from geocoder.db.rocksdb import RocksDbGeocode
+from geocoder_kr.db.rocksdb import RocksDbGeocode
 import time
 import shutil
-from geocoder.Geocoder import Geocoder
+from geocoder_kr.geocoder import Geocoder
 
 DB_NAME = "db/current"
 

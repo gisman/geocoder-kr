@@ -10,7 +10,7 @@ source venv/bin/activate
 echo 'Starting...'
 
 export FLASK_ENV=production
-echo | nohup python src/api_fast.py >> log/geocode-api.log &
+echo | nohup python api_fast.py 4002 >> log/geocode-api.log &
 
 sleep 1
 echo 'Started'

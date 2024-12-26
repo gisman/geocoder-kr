@@ -2,7 +2,7 @@ from unittest import result
 from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
 import json
-from geocoder.db.base import DbBase
+from geocoder_kr.db.base import DbBase
 
 
 class CassandraDbGeocode(DbBase):

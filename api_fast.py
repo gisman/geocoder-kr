@@ -41,19 +41,15 @@ Usage:
 
 import time
 import logging
-import os
-import rocksdb3
 from pyproj import Transformer, CRS
 
 from fastapi import APIRouter
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, HTMLResponse
 from pydantic import BaseModel
-import uvicorn
 
-from geocoder.Geocoder import Geocoder
-from geocoder.ReverseGeocoder import ReverseGeocoder
-from geocoder.db.rocksdb import RocksDbGeocode
+from geocoder_kr.geocoder import Geocoder
+from geocoder_kr.reverse_geocoder import ReverseGeocoder
 import sys
 
 APP_NAME = "Geocode API Server"
@@ -186,13 +182,15 @@ class ApiHandler:
     """
 
     # rocks db
-    geocoder = Geocoder(RocksDbGeocode("db/rocks", create_if_missing=True))
+    geocoder = Geocoder()
+    # geocoder = Geocoder(RocksDbGeocode("db/rocks", create_if_missing=True))
 
-    reverse_geocoder = ReverseGeocoder(
-        rocksdb3.open_default(
-            "db/rocks-reverse-geocoder",
-        )
-    )
+    reverse_geocoder = ReverseGeocoder()
+    # reverse_geocoder = ReverseGeocoder(
+    #     rocksdb3.open_default(
+    #         "db/rocks-reverse-geocoder",
+    #     )
+    # )
 
     tf = Transformer.from_crs(
         CRS.from_string("EPSG:5179"), CRS.from_string("EPSG:4326"), always_xy=True
@@ -286,24 +284,24 @@ class ApiHandler:
         return summary
 
 
-if __name__ == "__main__":
-    LOG_PATH = f"{os.getcwd()}/log/geocode-api.log"
-    print(f"logging to {LOG_PATH}")
+# if __name__ == "__main__":
+#     LOG_PATH = f"{os.getcwd()}/log/geocode-api.log"
+#     print(f"logging to {LOG_PATH}")
 
-    # 로그 설정
-    logging.basicConfig(
-        filename=LOG_PATH,
-        encoding="utf-8",
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        level=logging.INFO,
-        force=True,
-    )
+#     # 로그 설정
+#     logging.basicConfig(
+#         filename=LOG_PATH,
+#         encoding="utf-8",
+#         format="%(asctime)s - %(levelname)s - %(message)s",
+#         level=logging.INFO,
+#         force=True,
+#     )
 
-    if len(sys.argv) > 1:
-        port = int(sys.argv[1])
-    else:
-        port = DEFAULT_PORT
+#     if len(sys.argv) > 1:
+#         port = int(sys.argv[1])
+#     else:
+#         port = DEFAULT_PORT
 
-    uvicorn.run(app, host="0.0.0.0", port=port)
+#     uvicorn.run(app, host="0.0.0.0", port=port)
 
-    logging.info(f"Stopping {APP_NAME}...\n")
+#     logging.info(f"Stopping {APP_NAME}...\n")

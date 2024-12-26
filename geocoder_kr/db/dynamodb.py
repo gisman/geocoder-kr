@@ -1,7 +1,7 @@
 # import leveldb
 import boto3
 import json
-from geocoder.db.base import DbBase
+from geocoder_kr.db.base import DbBase
 
 
 class DynamoDbGeocode(DbBase):

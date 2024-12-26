@@ -17,10 +17,10 @@ import logging
 from markupsafe import escape
 import os
 
-from geocoder.Geocoder import Geocoder
-from geocoder.ReverseGeocoder import ReverseGeocoder
+from geocoder_kr.geocoder import Geocoder
+from geocoder_kr.reverse_geocoder import ReverseGeocoder
 
-from geocoder.db.rocksdb import RocksDbGeocode
+from geocoder_kr.db.rocksdb import RocksDbGeocode
 
 import json
 

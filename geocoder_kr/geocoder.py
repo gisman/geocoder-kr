@@ -4,6 +4,8 @@
 import re
 import csv
 import json
+
+from geocoder_kr.db.rocksdb import RocksDbGeocode
 from .Tokenizer import Tokenizer
 from .tokens import *
 from .hash.JibunAddress import JibunAddress
@@ -64,14 +66,17 @@ class Geocoder:
     hsimplifier = HSimplifier()
     hcodeMatcher = HCodeMatcher()
 
-    def __init__(self, db):
-        self.db = db
+    NOT_ADDRESS = "NOT_ADDRESS"
+    JIBUN_ADDRESS = "JIBUN_ADDRESS"
+    BLD_ADDRESS = "BLD_ADDRESS"
+    ROAD_ADDRESS = "ROAD_ADDRESS"
+    UNRECOGNIZABLE_ADDRESS = "UNRECOGNIZABLE_ADDRESS"
 
-        self.NOT_ADDRESS = "NOT_ADDRESS"
-        self.JIBUN_ADDRESS = "JIBUN_ADDRESS"
-        self.BLD_ADDRESS = "BLD_ADDRESS"
-        self.ROAD_ADDRESS = "ROAD_ADDRESS"
-        self.UNRECOGNIZABLE_ADDRESS = "UNRECOGNIZABLE_ADDRESS"
+    def __init__(self):
+        self.db = RocksDbGeocode("db/rocks")
+
+    def open(self, db):
+        self.db = db
 
     def __classfy(self, toks):
         """
